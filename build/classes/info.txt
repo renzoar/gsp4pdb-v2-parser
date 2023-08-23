@@ -1,0 +1,4 @@
+v22
+
+esta version emplea biojava4
+esta restringido para solo insertar en las tablas protein, distance_amino_amino, distance_het_amino, next_amino_amino

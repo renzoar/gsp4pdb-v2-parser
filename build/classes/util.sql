@@ -1,0 +1,21 @@
+delete from protein;
+delete from chain;
+delete from aminoacid;
+delete from het;
+delete from atomamino;
+delete from atomhet;
+delete from distanceaminoamino;
+delete from distanceaminohet;
+delete from distanceatomaminoatomamino;
+delete from distanceatomaminoatomhet;
+
+select * from protein;
+select * from chain;
+select * from aminoacid;
+select * from het;
+select * from atomamino;
+select * from atomhet;
+select * from distanceaminoamino;
+select * from distanceaminohet;
+select * from distanceatomaminoatomamino;
+select * from distanceatomaminoatomhet;

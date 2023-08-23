@@ -1,0 +1,113 @@
+CREATE TABLE protein (
+ id character varying(100) PRIMARY KEY,
+ title text,
+ classification text,
+ organism text,
+ dep_date character varying(100),
+ technique character varying(100),
+ mod_date character varying(100)
+);
+
+CREATE TABLE protein_cath (
+ pdbid character varying(100) PRIMARY KEY,
+ cath_code character varying(100),
+ class_code character varying(10),
+ class_name text,
+ arch_code character varying(10),
+ arch_name text,
+ topol_code character varying(10),
+ topol_name text,
+ homol_code character varying(10),
+ homol_name text
+);
+
+CREATE TABLE standard_amino (
+ symbol character varying(1) PRIMARY KEY,
+ name character varying(50) NOT NULL,
+ abbreviation character varying(3) NOT NULL,
+ classification text,
+ class smallint
+);
+
+INSERT INTO standard_amino VALUES ('A', 'ALANINE', 'ALA', 'NON-POLAR', 1);
+INSERT INTO standard_amino VALUES ('R', 'ARGININE', 'ARG', 'POSITIVELY CHARGED', 3);
+INSERT INTO standard_amino VALUES ('N', 'ASPARAGINE', 'ASN', 'POLAR', 2);
+INSERT INTO standard_amino VALUES ('D', 'ASPARTIC ACID', 'ASP', 'NEGATIVELY CHARGED', 4);
+INSERT INTO standard_amino VALUES ('C', 'CYSTEINE', 'CYS', 'POLAR', 2);
+INSERT INTO standard_amino VALUES ('Q', 'GLUTAMINE', 'GLN', 'POLAR', 2);
+INSERT INTO standard_amino VALUES ('E', 'GLUTAMIC ACID', 'GLU', 'NEGATIVELY CHARGED', 4);
+INSERT INTO standard_amino VALUES ('G', 'GLYCINE', 'GLY', 'POLAR', 2);
+INSERT INTO standard_amino VALUES ('H', 'HISTIDINE', 'HIS', 'POSITIVELY CHARGED', 3);
+INSERT INTO standard_amino VALUES ('I', 'ISOLEUCINE', 'ILE', 'NON-POLAR', 1);
+INSERT INTO standard_amino VALUES ('L', 'LEUCINE', 'LEU', 'NON-POLAR', 1);
+INSERT INTO standard_amino VALUES ('K', 'LYSINE', 'LYS', 'POSITIVELY CHARGED', 3);
+INSERT INTO standard_amino VALUES ('M', 'METHIONINE', 'MET', 'NON-POLAR', 1);
+INSERT INTO standard_amino VALUES ('F', 'PHENYLALANINE', 'PHE', 'NON-POLAR', 1);
+INSERT INTO standard_amino VALUES ('P', 'PROLINE', 'PRO', 'NON-POLAR', 1);
+INSERT INTO standard_amino VALUES ('S', 'SERINE', 'SER', 'POLAR', 2);
+INSERT INTO standard_amino VALUES ('T', 'THREONINE', 'THR', 'POLAR', 2);
+INSERT INTO standard_amino VALUES ('W', 'TRYPTOPHAN', 'TRP', 'NON-POLAR', 1);
+INSERT INTO standard_amino VALUES ('Y', 'TYROSINE', 'TYR', 'POLAR', 2);
+INSERT INTO standard_amino VALUES ('V', 'VALINE', 'VAL', 'NON-POLAR', 1);
+INSERT INTO standard_amino VALUES ('U', 'UNDEFINED', 'UND', 'UNDEFINED', 5);
+
+
+CREATE TABLE distance_amino_amino (
+ protein_id character varying(100),
+ amino1_id character varying(100) NOT NULL,
+ amino1_symbol character varying(100) NOT NULL,
+ amino1_class smallint NOT NULL,
+ amino1_number character varying(50),
+ amino2_id character varying(100) NOT NULL,
+ amino2_symbol character varying(100) NOT NULL,
+ amino2_class smallint NOT NULL,
+ amino2_number character varying(50),
+ dist real NOT NULL
+);
+CREATE INDEX idx_daa_amino1_id ON distance_amino_amino USING btree (amino1_id); 
+CREATE INDEX idx_daa_amino1_symbol ON distance_amino_amino USING btree (amino1_symbol); 
+CREATE INDEX idx_daa_amino2_id ON distance_amino_amino USING btree (amino2_id); 
+CREATE INDEX idx_daa_amino2_symbol ON distance_amino_amino USING btree (amino2_symbol); 
+
+
+CREATE TABLE distance_het_amino (
+ protein_id character varying(100),
+ het_id character varying(100) NOT NULL,
+ het_symbol character varying(100) NOT NULL,
+ het_number character varying(50),
+ amino_id character varying(100) NOT NULL,
+ amino_symbol character varying(100) NOT NULL,
+ amino_class smallint NOT NULL,
+ amino_number character varying(50),
+ dist real NOT NULL
+);
+CREATE INDEX idx_dha_het_id ON distance_het_amino USING btree (het_id); 
+CREATE INDEX idx_dha_hetsymbol ON distance_het_amino USING btree (het_symbol); 
+CREATE INDEX idx_dha_amino_id ON distance_het_amino USING btree (amino_id); 
+CREATE INDEX idx_dha_aminosymbol ON distance_het_amino USING btree (amino_symbol);
+
+
+CREATE TABLE next_amino_amino (
+ protein_id character varying(100),
+ amino1_id character varying(100) NOT NULL,
+ amino1_symbol character varying(100) NOT NULL,
+ amino1_class smallint NOT NULL,
+ amino1_number character varying(50),   
+ amino2_id character varying(100) NOT NULL,
+ amino2_symbol character varying(100) NOT NULL,
+ amino2_class smallint NOT NULL,
+ amino2_number character varying(50) 
+);
+CREATE INDEX idx_naa_amino1_id ON next_amino_amino USING btree (amino1_id); 
+CREATE INDEX idx_naa_amino1_symbol ON next_amino_amino USING btree (amino1_symbol); 
+CREATE INDEX idx_naa_amino2_id ON next_amino_amino USING btree (amino2_id); 
+CREATE INDEX idx_naa_amino2_symbol ON next_amino_amino USING btree (amino2_symbol); 
+
+
+
+
+
+
+
+
+
