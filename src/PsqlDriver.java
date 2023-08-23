@@ -26,7 +26,7 @@ import java.util.Iterator;
 public class PsqlDriver {
 
     String driver = "org.postgresql.Driver";
-    String connectString = "jdbc:postgresql://localhost:5432/pdb_opt";
+    String connectString = "jdbc:postgresql://localhost:5432/pdb_norm";
     String user = "#######!";
     String password = "#######!";
 
@@ -138,7 +138,16 @@ public class PsqlDriver {
 
         SChain chain = protein.main_chain;
         if (chain != null) {
+            //insert "chain" data
            
+            expr = "insert into chain values ("
+                    + "'" + chain.id + "',"
+                    + "'" + chain.protein_id + "',"
+                    + "'" + chain.seqres + "',"
+                    + chain.num_het + ","
+                    + chain.num_amino + ","
+                    + "'" + chain.code+ "')";
+            this.AddToBatch(expr);
 
             Iterator<Aminoacid> ita = chain.aminoacids.iterator();
             while (ita.hasNext()) {
@@ -154,40 +163,77 @@ public class PsqlDriver {
                     next_amino_number = amino.next_amino.number;
                 }
 
+                //insert "aminoacid" data
                 
+                expr = "insert into aminoacid values ("
+                        + "'" + amino.id + "'" + ","
+                        + "'" + amino.chain_id+ "'" + ","
+                        + "'" + amino.symbol + "'" + ","
+                        + "'" + amino.number + "')" ;
+                this.AddToBatch(expr);
+
+                //insert "atom_amino" data
+                
+                Iterator<AtomAmino> itaa = amino.atoms.iterator();
+                while (itaa.hasNext()) {
+                    AtomAmino atoma = itaa.next();
+                    expr = "insert into atom_amino values ("
+                            + "'" + atoma.id + "','"
+                            + atoma.symbol + "',"
+                            + atoma.number + ","
+                            + atoma.x + ","
+                            + atoma.y + ","
+                            + atoma.z + ",'"
+                            + atoma.element + "','"
+                            + atoma.amino_id + "')";
+                    this.AddToBatch(expr);
+                }
 
                 if (next_amino_id != "NULL") {
                     //insert "next_amino_amino" data
                     expr = "insert into next_amino_amino values ("
-                            + "'" + chain.protein_id + "'" + ","
                             + "'" + amino.id + "'" + ","
-                            + "'" + amino.symbol + "'" + ","
-                            + "'" + amino.class_number + "',"
-                            + "'" + amino.number + "',"
-                            + "'" + next_amino_id + "'" + ","
-                            + "'" + next_amino_symbol + "'" + ","
-                            + next_amino_class + ","
-                            + "'" + next_amino_number + "')";
+                            + "'" + next_amino_id + "')";
                     this.AddToBatch(expr);
                 }
             }
 
+            // insert "het" data (ligands)
             
+            Iterator<Hetam> ith = chain.hetams.iterator();
+            while (ith.hasNext()) {
+                Hetam het = ith.next();
+                expr = "insert into het values ("
+                        + "'" + het.id + "',"
+                        + "'" + het.chain_id+ "',"
+                        + "'" + het.symbol + "',"
+                        + "'" + 0+ "')";
+                this.AddToBatch(expr);
+
+                // insert "atom_het" data
+                Iterator<AtomHet> itah = het.atoms.iterator();
+                while (itah.hasNext()) {
+                    AtomHet atomh = itah.next();
+                    expr = "insert into atom_het values ("
+                            + "'" + atomh.id + "','"
+                            + atomh.symbol + "',"
+                            + atomh.number + ","
+                            + atomh.x + ","
+                            + atomh.y + ","
+                            + atomh.z + ",'"
+                            + atomh.element + "','"
+                            + atomh.het_id + "')";
+                    this.AddToBatch(expr);
+                }
+            }
 
             // insert "distance_amino_amino" data
             Iterator<DistanceAminoAmino> itdaa = chain.daa_list.iterator();
             while (itdaa.hasNext()) {
                 DistanceAminoAmino dist = itdaa.next();
                 expr = "insert into distance_amino_amino values ("
-                        + "'" + chain.protein_id + "'" + ","
                         + "'" + dist.amino1.id + "'" + ","
-                        + "'" + dist.amino1.symbol + "'" + ","
-                        + dist.amino1.class_number + ","
-                        + "'" + dist.amino1.number + "',"
                         + "'" + dist.amino2.id + "'" + ","
-                        + "'" + dist.amino2.symbol + "'" + ","
-                        + dist.amino2.class_number + ","
-                        + "'" + dist.amino2.number + "',"
                         + dist.dist + ")";
                 this.AddToBatch(expr);
             }
@@ -197,14 +243,8 @@ public class PsqlDriver {
             while (itdha.hasNext()) {
                 DistanceHetAmino dist = itdha.next();
                 expr = "insert into distance_het_amino values ("
-                        + "'" + chain.protein_id + "'" + ","
-                        + "'" + dist.het.id + "'" + ","
-                        + "'" + dist.het.symbol + "'" + ","
-                        + "'" + dist.het.number + "'" + ","
                         + "'" + dist.amino.id + "'" + ","
-                        + "'" + dist.amino.symbol + "'" + ","
-                        + dist.amino.class_number + ","
-                        + "'" + dist.amino.number + "',"
+                        + "'" + dist.het.id+ "'" + ","
                         + dist.dist + ")";
                 this.AddToBatch(expr);
             }
