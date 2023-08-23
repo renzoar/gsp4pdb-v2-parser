@@ -17,17 +17,7 @@ public class Test2 {
 
     public static void main(String[] args) throws StructureException {
         
-        /*
-        AtomCache cache = new AtomCache();
-        cache.setPath("./datos");
-        try {
-            Structure s = cache.getStructure("1afr");
-            System.out.println(s);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
-
-        
+                
         String filename = "./datos/1afr.pdb";
         PDBFileReader pdbreader = new PDBFileReader();
         try {
